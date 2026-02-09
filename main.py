@@ -101,7 +101,7 @@ def generate_docx(payload: GenerateRequest, template_path: str):
 
         # Render with the *new* context
         doc.render(final_context)
-        doc.save("Ganesh_Gouru_Resume.docx")
+        doc.save("Rahul Vanukuri.docx")
 
         buffer = BytesIO()
         doc.save(buffer)
@@ -110,7 +110,7 @@ def generate_docx(payload: GenerateRequest, template_path: str):
         docx_b64 = base64.b64encode(buffer.read()).decode("utf-8")
 
         return GenerateResponse(
-            filename="Ganesh_Gouru_Resume.docx",
+            filename="Rahul Vanukuri.docx",
             docx_b64=docx_b64
         )
     
