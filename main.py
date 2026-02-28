@@ -66,11 +66,21 @@ def process_context_for_richtext(context_data: dict) -> dict:
     """
     Scans the context dict.
     Converts target string lists into RichText objects.
+    Also supports markdown-bold in TECHNICAL_SKILLS[*].SKILLS.
     """
     processed_context = {}
 
+    # Keys that are lists of bullet strings we want to convert to RichText
+    richtext_list_keys = (
+        "SUMMARY",
+        "RESPONSIBILITES_CO",
+        "RESPONSIBILITES_CI",
+        "RESPONSIBILITES_CS",
+    )
+
     for key, value in context_data.items():
-        if key in ("SUMMARY", "RESPONSIBILITES_AL", "RESPONSIBILITES_FD", "RESPONSIBILITES_SM") and isinstance(value, list):
+        # Convert bullet lists (summary + responsibilities) into RichText objects
+        if key in richtext_list_keys and isinstance(value, list):
             processed_list = []
             for item in value:
                 if isinstance(item, str):
@@ -78,8 +88,25 @@ def process_context_for_richtext(context_data: dict) -> dict:
                 else:
                     processed_list.append(item)
             processed_context[key] = processed_list
-        else:
-            processed_context[key] = value
+            continue
+
+        # Convert TECHNICAL_SKILLS[*].SKILLS into RichText if you use **bold**
+        if key == "TECHNICAL_SKILLS" and isinstance(value, list):
+            new_skills = []
+            for category in value:
+                if isinstance(category, dict):
+                    updated = dict(category)
+                    skills_text = updated.get("SKILLS")
+                    if isinstance(skills_text, str):
+                        updated["SKILLS"] = attempt_to_parse_markdown(skills_text)
+                    new_skills.append(updated)
+                else:
+                    new_skills.append(category)
+            processed_context[key] = new_skills
+            continue
+
+        # Default: keep as-is
+        processed_context[key] = value
 
     return processed_context
 
