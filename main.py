@@ -66,7 +66,7 @@ def process_context_for_richtext(context_data: dict) -> dict:
     """
     Scans the context dict.
     Converts target string lists into RichText objects.
-    Also supports markdown-bold in TECHNICAL_SKILLS[*].SKILLS.
+    Leaves TECHNICAL_SKILLS as plain strings for reliable table rendering.
     """
     processed_context = {}
 
@@ -90,19 +90,9 @@ def process_context_for_richtext(context_data: dict) -> dict:
             processed_context[key] = processed_list
             continue
 
-        # Convert TECHNICAL_SKILLS[*].SKILLS into RichText if you use **bold**
+        # Keep skills plain text (important for Word table cells)
         if key == "TECHNICAL_SKILLS" and isinstance(value, list):
-            new_skills = []
-            for category in value:
-                if isinstance(category, dict):
-                    updated = dict(category)
-                    skills_text = updated.get("SKILLS")
-                    if isinstance(skills_text, str):
-                        updated["SKILLS"] = attempt_to_parse_markdown(skills_text)
-                    new_skills.append(updated)
-                else:
-                    new_skills.append(category)
-            processed_context[key] = new_skills
+            processed_context[key] = value
             continue
 
         # Default: keep as-is
