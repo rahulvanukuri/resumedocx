@@ -66,7 +66,6 @@ def process_context_for_richtext(context_data: dict) -> dict:
     """
     Scans the context dict.
     Converts target string lists into RichText objects.
-<<<<<<< HEAD
     Also supports markdown-bold in TECHNICAL_SKILLS[*].SKILLS.
     """
     processed_context = {}
@@ -82,13 +81,6 @@ def process_context_for_richtext(context_data: dict) -> dict:
     for key, value in context_data.items():
         # Convert bullet lists (summary + responsibilities) into RichText objects
         if key in richtext_list_keys and isinstance(value, list):
-=======
-    """
-    processed_context = {}
-
-    for key, value in context_data.items():
-        if key in ("SUMMARY", "RESPONSIBILITES_AL", "RESPONSIBILITES_FD", "RESPONSIBILITES_SM") and isinstance(value, list):
->>>>>>> cee11b7 (Clean commit without nested repo folder)
             processed_list = []
             for item in value:
                 if isinstance(item, str):
@@ -96,7 +88,6 @@ def process_context_for_richtext(context_data: dict) -> dict:
                 else:
                     processed_list.append(item)
             processed_context[key] = processed_list
-<<<<<<< HEAD
             continue
 
         # Convert TECHNICAL_SKILLS[*].SKILLS into RichText if you use **bold**
@@ -116,10 +107,6 @@ def process_context_for_richtext(context_data: dict) -> dict:
 
         # Default: keep as-is
         processed_context[key] = value
-=======
-        else:
-            processed_context[key] = value
->>>>>>> cee11b7 (Clean commit without nested repo folder)
 
     return processed_context
 
